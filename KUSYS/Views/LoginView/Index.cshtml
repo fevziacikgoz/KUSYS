@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "_LoginLayout";
+}
+
+<form>
+    <h1>Login</h1>
+    <div class="content">
+        <div class="input-field">
+            <input type="email" placeholder="Email" autocomplete="nope" name="email" id="email" required>
+        </div>
+        <div class="input-field">
+            <input type="password" placeholder="Password" name="password" id="password" autocomplete="new-password" required>
+        </div>
+    </div>
+    <div class="action">
+        <a class="action-button" href="/LoginView/Register">Register</a>
+        <button class="action-button" type="button" onclick="login()">Sign in</button>
+    </div>
+</form>
+

@@ -1,0 +1,91 @@
+﻿@model KUSYS.Application.CourseOp.CreateUpdateCourseModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>CreateUpdateCourseModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" checked /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Create" onclick="createCourse()" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts{
+    <script>
+        function createCourse() {
+
+            loadingBegin("container");
+
+            var data = JSON.stringify({
+                "createUpdateCourseModel": {
+                    "id": 0,
+                    "name": $("#Name").val(),
+                    "description": $("#Description").val(),
+                    "isActive": Boolean($("#IsActive").val())
+                }
+            });
+            $.ajax({
+                url: "/Course",
+                type: "post",
+                data: data,
+                headers: {
+                    "Authorization": "Bearer " + getCookie("jwt-token"),
+                    "content-type": "application/json",
+                    "accept": "application/json"
+                },
+                success: function (result) {
+                    console.log(result);
+                    window.location.href = "/CourseView/Index";
+                    loadingEnd("container");
+
+                },
+                error: function (error) {
+                    console.log(error.responseJSON)
+                    loadingEnd("container");
+
+                    if (error.status == 401) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    } else if (error.responseJSON.message == undefined) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    }
+                    else {
+                        toastMessage("error", error.responseJSON.message, "")
+                    }
+                }
+            });
+
+        }
+    </script>
+}

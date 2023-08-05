@@ -1,0 +1,96 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/css/toastr.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="login-form">
+        @RenderBody()
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/toastr.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script>
+        $(document).ready(function () {
+            let x = document.cookie;
+            console.log(getCookie("jwt-token"))
+        })
+
+        function login() {
+            loadingBegin("login-form");
+
+            $.ajax({
+                url: "/Authentication/Login?email=" + $("#email").val() + "&password=" + $("#password").val(),
+                type: "post",
+                success: function (result) {
+                    //console.log(result)
+                    toastMessage("success", result.message, "")
+                    setCookie("jwt-token", result.token, 1);
+                    window.location.href = "/StudentView/Index";
+                    loadingEnd("login-form");
+
+                },
+                error: function (error) {
+                    console.log(error)
+                    loadingEnd("login-form");
+
+                    if (error.status == 401) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    } else {
+                        toastMessage("error", error.responseJSON.message, "")
+                    }
+                }
+            });
+        }
+
+        function register() {
+            loadingBegin("login-form");
+            var data = JSON.stringify({
+                "email": $("#email").val(), //"osm@osm.com",
+                "password": $("#password").val(), // "String.1",
+                "name": $("#name").val(), //"string",
+                "surname": $("#surname").val(), //"string",
+                "schoolNumber": $("#schoolNumber").val(), //2,
+                "birthDate": $("#birthDate").val(), //"2023-08-04T22:31:53.793Z",
+                "phoneNumber": $("#phoneNumber").val(), //"22333"
+            });
+            console.log(data)
+            $.ajax({
+                url: "/Authentication/Register",
+                type: "post",
+                headers: {
+                    "content-type": "application/json",
+                    "accept": "*/*"
+                },
+                data: data,
+                success: function (result) {
+                    toastMessage("success", result.message, "");
+                    loadingEnd("login-form");
+                    window.location.href = "/LoginView/Index";
+                },
+                error: function (error) {
+                    console.log(error)
+                    loadingEnd("login-form");
+
+                    if (error.status == 401) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    } else {
+                        toastMessage("error", error.responseJSON.message, "")
+                    }
+                }
+            });
+        }
+
+    </script>
+
+</body>
+</html>

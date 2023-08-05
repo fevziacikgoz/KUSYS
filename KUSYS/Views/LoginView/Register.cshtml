@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "_LoginLayout";
+}
+
+<form>
+    <h1>Register</h1>
+    <div class="content">
+        <div class="input-field">
+            <input type="email" placeholder="Email" autocomplete="nope" name="email" id="email" required>
+        </div>
+        <div class="input-field">
+            <input type="password" placeholder="Password" name="password" id="password" autocomplete="new-password" required>
+        </div>
+        <div class="input-field">
+            <input type="text" placeholder="Name" name="name" id="name" required>
+        </div>
+        <div class="input-field">
+            <input type="text" placeholder="Surname" name="surname" id="surname" required>
+        </div>
+        <div class="input-field">
+            <input type="number" placeholder="SchoolNumber" name="schoolNumber" id="schoolNumber" autocomplete="new-password" required>
+        </div>
+        <div class="input-field">
+            <input type="date" placeholder="Birh date" name="birthDate" id="birthDate" autocomplete="new-password" required>
+        </div>
+        <div class="input-field">
+            <input type="text" placeholder="Phone number" name="phoneNumber" id="phoneNumber" autocomplete="new-password" required>
+        </div>
+       
+    </div>
+    <div class="action">
+        <a class="action-button"  href="/LoginView">Back To Login</a>
+        <button type="button" class="action-button" onclick="register()">Register</button>
+    </div>
+</form>

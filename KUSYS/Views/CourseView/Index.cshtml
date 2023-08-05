@@ -1,0 +1,89 @@
+﻿@model IEnumerable<KUSYS.Application.CourseOp.CourseResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<a href="/CourseView/Create">Create</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="tbodyCourse">
+      
+    </tbody>
+</table>
+@section Scripts{
+
+    <script>
+        $(document).ready(function () {
+            loadingBegin("container");
+            $.ajax({
+                url: "/Course",
+                type: "get",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("jwt-token"),
+                    "content-type": "application/json",
+                    "accept": "application/json"
+                },
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    result.forEach(function (item, index) {
+                        console.log(Object.keys(item));
+                        var row = document.createElement("tr");
+                        var keyNames = Object.keys(item);
+                        keyNames.forEach(function (keyName, keyIndex) {
+                            var colElement = document.createElement("td");
+                            var textContent = item[keyName];
+                            if (keyName == "birthDate") {
+                                var birthDay = new Date(item[keyName]);
+                                console.log(birthDay)
+                                console.log(birthDay.toJSON())
+                                textContent = birthDay.toJSON().split('T')[0];
+                            }
+                            colElement.textContent = textContent;
+
+                            row.appendChild(colElement);
+                        })
+                        var colElementSettings = document.createElement("td");
+                        colElementSettings.innerHTML = " <a href=\"/CourseView/Edit/" + item.id + "\"> View Course </a>";
+                        row.appendChild(colElementSettings);
+                        var tbdoyElement = document.getElementById("tbodyCourse");
+                        tbdoyElement.appendChild(row)
+                    })
+                    loadingEnd("container");
+                },
+                error: function (error) {
+                    console.log(error)
+                    loadingEnd("container");
+                    if (error.status == 401) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    } else {
+                        toastMessage("error", error.responseJSON.message, "")
+                    }
+                }
+            });
+        });
+    </script>
+}

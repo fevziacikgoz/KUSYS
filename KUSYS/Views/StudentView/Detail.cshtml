@@ -1,0 +1,122 @@
+﻿@model KUSYS.Application.StudentsOp.StudentsResponse
+
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Detail</h1>
+
+<div>
+    <h4>StudentsResponse</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Surname)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Surname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SchoolNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SchoolNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Mail)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Mail)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UpdatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.UpdatedDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsActive)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsActive)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new {  id = ViewBag.Id }) |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            loadingBegin("container");
+
+            $.ajax({
+                url: "/Student/GetById/" + @ViewBag.Id,
+                type: "get",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("jwt-token"),
+                    "content-type": "application/json",
+                    "accept": "application/json"
+                },
+                dataType: "json",
+                success: function (result) {
+                    var html = "";
+                    var itemKeys = Object.keys(result);
+                    itemKeys.forEach(function (item, index) {
+                        html += " <dt class = 'col-sm-2'>" +
+                            item +
+                            "</dt>" +
+                            "<dd class = 'col-sm-10'>" +
+                            result[item] +
+                            "</dd>";
+                    })
+                    $(".row").html(html);
+                    loadingEnd("container");
+
+                },
+                error: function (error) {
+                    console.log(error)
+                    loadingEnd("container");
+                    if (error.status == 401) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    } else {
+                        toastMessage("error", error.responseJSON.message, "")
+                    }
+                }
+            });
+        });
+    </script>
+}

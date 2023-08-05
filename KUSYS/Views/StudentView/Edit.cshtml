@@ -1,0 +1,146 @@
+﻿@model KUSYS.Application.StudentsOp.CreateUpdateStudentModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>CreateUpdateStudentModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" class="form-control" value="@ViewBag.Id" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Surname" class="control-label"></label>
+                <input asp-for="Surname" class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+            </div>
+        
+            <div class="form-group">
+                <label asp-for="SchoolNumber" class="control-label"></label>
+                <input asp-for="SchoolNumber" class="form-control" />
+                <span asp-validation-for="SchoolNumber" class="text-danger"></span>
+            </div>
+          
+            <div class="form-group">
+                <label asp-for="BirthDate" class="control-label"></label>
+                <input asp-for="BirthDate" class="form-control" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mail" class="control-label"></label>
+                <input asp-for="Mail" class="form-control" />
+                <span asp-validation-for="Mail" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="IdentityUserId" class="form-control" />
+            </div>
+            
+            <div class="form-group">
+                <input type="button" value="Save" onclick="saveStudent()" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            $.ajax({
+                url: "/Student/GetById/" + @ViewBag.Id,
+                type: "get",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("jwt-token"),
+                    "content-type": "application/json",
+                    "accept": "application/json"
+                },
+                dataType: "json",
+                success: function (result) {
+                    console.log(result)
+                    $("#IdentityUserId").val(result.identityUserId)
+                    $("#Name").val(result.name)
+                    $("#Surname").val(result.surname)
+                    $("#SchoolNumber").val(result.schoolNumber)
+                    $("#BirthDate").val(result.birthDate)
+                    $("#Mail").val(result.mail)
+                    $("#PhoneNumber").val(result.phoneNumber)
+
+                },
+                error: function (error) {
+                    console.log(error)
+                    if (error.status == 401) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    } else {
+                        toastMessage("error", error.responseJSON.message, "")
+                    }
+                }
+            });
+        })
+        function saveStudent(){
+            var data = JSON.stringify({
+                "createUpdateStudentModel": {
+                    "id": $("#Id").val(),
+                    "identityUserId": $("#IdentityUserId").val(),
+                    "name": $("#Name").val(),
+                    "surname": $("#Surname").val(),
+                    "schoolNumber": $("#SchoolNumber").val(),
+                    "birthDate": $("#BirthDate").val(),
+                    "mail": $("#Mail").val(),
+                    "phoneNumber": $("#PhoneNumber").val(),
+                    "isActive": Boolean($("#IsActive").val())
+                }
+            })
+            $.ajax({
+                url: "/Student",
+                type: "put",
+                data: data,
+                headers: {
+                    "Authorization": "Bearer " + getCookie("jwt-token"),
+                    "content-type": "application/json",
+                    "accept": "application/json"
+                },
+                success: function (result) {
+                    console.log(result);
+                    window.location.href = "/StudentView/Index";
+                },
+                error: function (error) {
+                    console.log(error.responseJSON)
+                    if (error.status == 401) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    } else if (error.responseJSON.message == undefined) {
+                        toastMessage("error", error.responseJSON.title, "")
+                    }
+                    else {
+                        toastMessage("error", error.responseJSON.message, "")
+                    }
+                }
+            });
+        }
+    </script>
+            }

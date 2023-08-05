@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - KUSYS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/toastr.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/KUSYS.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="    padding-left: 40%;
+    background-color: #fff;">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav" style="font-size:15pt !important;border-right:1px solid">
+
+            <li class="nav-item d-none d-sm-inline-block">
+                <a href="/StudentView" class="nav-link">Student</a>
+            </li>
+
+        </ul>
+
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto" style="font-size:15pt !important;margin-left:40px;border-left:1px solid">
+            <!-- Navbar Search -->
+            <li class="nav-item">
+                <a href="/CourseView" class="nav-link">Course</a>
+            </li>
+
+        </ul>
+    </nav>
+    <div class="container" style="background:#fff;border-radius: 20px; max-width:100% !important">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/toastr.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
