@@ -22,6 +22,7 @@ namespace KUSYS.Api.Controllers
             _mediator = mediator;
         }
 
+
         [HttpGet]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<StudentsResponse>))]
